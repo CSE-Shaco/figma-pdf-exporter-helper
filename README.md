@@ -4,7 +4,7 @@
 
 ## 한국어
 
-Figma PDF Exporter Pro 또는 Preview에서 컴퓨터에 설치된 글꼴을 찾아 PDF에 사용할 수 있도록 돕는 도우미입니다.
+[Figma PDF Exporter](https://www.figma.com/community/plugin/1687713957062844849) Pro 또는 Preview에서 컴퓨터에 설치된 글꼴을 찾아 PDF에 사용할 수 있도록 돕는 도우미입니다.
 
 ### 다운로드 및 설치
 
@@ -39,7 +39,7 @@ Figma PDF Exporter Pro 또는 Preview에서 컴퓨터에 설치된 글꼴을 찾
 
 ## English
 
-This helper lets Figma PDF Exporter Pro or Preview find locally installed fonts for PDF export.
+This helper lets [Figma PDF Exporter](https://www.figma.com/community/plugin/1687713957062844849) Pro or Preview find locally installed fonts for PDF export.
 
 ### Download and setup
 
