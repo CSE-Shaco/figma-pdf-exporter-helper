@@ -257,6 +257,9 @@ def make_server(index, token, port=38473):
     return Server(('127.0.0.1', port), Handler)
 
 if __name__ == '__main__':
+    # Redirected Windows output must retain Korean startup text and pairing codes.
+    if hasattr(sys.stdout, 'reconfigure'):
+        sys.stdout.reconfigure(encoding='utf-8')
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--port', type=int, default=38473, help='loopback port (0 chooses a free port)')
     args = parser.parse_args()

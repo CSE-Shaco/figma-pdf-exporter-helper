@@ -18,7 +18,7 @@ def main():
     index = FontIndex()
     assert index.fonts, 'No OS fonts discovered on the test machine'
     process = subprocess.Popen([binary, '--port', '0'], stdout=subprocess.PIPE,
-                               stderr=subprocess.STDOUT, text=True)
+                               stderr=subprocess.STDOUT, text=True, encoding='utf-8')
     lines = queue.Queue()
     def read_output():
         for line in process.stdout:
