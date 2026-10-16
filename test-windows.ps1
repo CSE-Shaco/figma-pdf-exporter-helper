@@ -1,4 +1,4 @@
-# Run on a stock Windows runner with Windows PowerShell 5.1.
+﻿# Run on a stock Windows runner with Windows PowerShell 5.1.
 Set-StrictMode -Version Latest
 $ErrorActionPreference = 'Stop'
 $folder = Join-Path $env:LOCALAPPDATA 'Microsoft\Windows\Fonts'
