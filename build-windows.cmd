@@ -1,7 +1,8 @@
 @echo off
 setlocal
 cd /d "%~dp0"
-py -3 -m venv .build-venv
+if not defined PYTHON_BIN set "PYTHON_BIN=python"
+"%PYTHON_BIN%" -m venv .build-venv
 if errorlevel 1 exit /b 1
 .build-venv\Scripts\python.exe -m pip install --disable-pip-version-check pyinstaller==6.22.3
 if errorlevel 1 exit /b 1
