@@ -29,6 +29,7 @@ def package(artifacts, output):
                 shutil.copy2(ROOT / 'start-windows.cmd', staged)
                 shutil.copy2(ROOT / 'helper-windows.ps1', staged)
             shutil.copy2(ROOT / 'README.md', staged)
+            shutil.copy2(ROOT / 'LICENSE', staged)
             shutil.copy2(ROOT / 'CHANGELOG.md', staged)
             shutil.copytree(ROOT / 'licenses', staged / 'licenses')
             with zipfile.ZipFile(output / (name + '.zip'), 'w', zipfile.ZIP_DEFLATED) as archive:

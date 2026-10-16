@@ -9,6 +9,10 @@ on:
       - '*.command'
       - '*.cmd'
       - '*.ps1'
+      - 'LICENSE'
+      - 'README.md'
+      - 'CHANGELOG.md'
+      - 'licenses/**'
       - '.github/workflows/font-helper-build.yml'
 
 permissions:
@@ -48,7 +52,7 @@ jobs:
         run: |
           mkdir -p "package/font-helper-macos-$HELPER_ARCH/dist"
           cp "dist/font-helper-macos-$HELPER_ARCH" "package/font-helper-macos-$HELPER_ARCH/dist/"
-          cp start-macos.command README.md "package/font-helper-macos-$HELPER_ARCH/"
+          cp start-macos.command README.md LICENSE "package/font-helper-macos-$HELPER_ARCH/"
           cd package
           zip -r "font-helper-macos-$HELPER_ARCH.zip" "font-helper-macos-$HELPER_ARCH"
           shasum -a 256 "font-helper-macos-$HELPER_ARCH.zip" > "font-helper-macos-$HELPER_ARCH.zip.sha256"

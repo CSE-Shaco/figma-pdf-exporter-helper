@@ -1,6 +1,6 @@
 # Bundled runtime notices
 
-These are unmodified upstream notices for runtime components used by the v0.1.0 standalone executables. They do not grant a license to the helper's own source or to users' fonts. System frameworks are supplied by the operating system.
+These are unmodified upstream notices for runtime components used by the standalone executables. The helper's own software and source code are licensed under the MIT License in the package root. These dependency notices do not change that license, and the helper's MIT license does not apply to these third-party components or to users' fonts. Font rights and permitted use remain the user's responsibility. System frameworks are supplied by the operating system.
 
 - macOS: CPython 3.13.15, PyInstaller 6.22.3; CPython's macOS installer recipe uses OpenSSL 3.0.21 and liblzma from XZ 5.2.3.
 - Windows: CPython 3.13.16, PyInstaller 6.22.3; its external dependency recipe lists bzip2 1.0.8, libffi 3.4.4, OpenSSL 3.5.9, XZ 5.2.5 and zlib 1.3.1. Microsoft runtime binaries are distributed as part of the official CPython runtime.

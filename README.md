@@ -8,7 +8,7 @@ Figma PDF Exporter Pro 또는 Preview에서 컴퓨터에 설치된 글꼴을 찾
 
 ### 다운로드 및 설치
 
-[v0.1.0 릴리스](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/tag/v0.1.0)에서 컴퓨터에 맞는 ZIP을 내려받으세요.
+[v0.1.1 릴리스](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/tag/v0.1.1)에서 컴퓨터에 맞는 ZIP을 내려받으세요.
 
 | 컴퓨터 | 다운로드 |
 | --- | --- |
@@ -16,10 +16,12 @@ Figma PDF Exporter Pro 또는 Preview에서 컴퓨터에 설치된 글꼴을 찾
 | Intel Mac | [macOS x86_64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-macos-x86_64.zip) |
 | Windows x64 | [Windows x64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-windows-x64.zip) |
 
-1. ZIP 전체를 압축 해제하세요. 내부 `dist` 폴더와 실행 파일을 함께 유지하세요.
+1. ZIP 전체를 압축 해제하세요. 내부 `dist` 폴더와 실행 파일을 함께 유지하세요. `LICENSE`에는 헬퍼 라이선스가, `licenses/`에는 런타임 구성요소 고지가 들어 있습니다.
 2. Mac은 `start-macos.command`, Windows는 `start-windows.cmd`를 실행하세요. Python 설치는 필요하지 않습니다.
 3. 창에 표시된 **64자리 16진수 연결 코드**를 PDF Exporter Pro 또는 Preview의 **Local Fonts** 영역에 입력하세요.
 4. 플러그인에서 글꼴을 검색하세요. 사용하는 동안 도우미 창을 열어 두세요. 종료하려면 창을 닫거나 `Ctrl+C`를 누르세요.
+
+**라이선스:** 헬퍼 프로그램과 저장소 소스 코드는 [MIT License](LICENSE)로 제공됩니다. 이 라이선스는 사용자 글꼴이나 함께 배포된 제3자 구성요소에는 적용되지 않습니다. 해당 구성요소는 각자의 라이선스와 고지를 따릅니다. 사용자는 글꼴 사용 권한과 허용된 사용 방식을 확인해야 합니다.
 
 **이 릴리스는 서명·공증되지 않았습니다.** macOS Gatekeeper나 Windows SmartScreen이 실행을 제한할 수 있습니다. 출처와 [SHA-256 체크섬](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/SHA256SUMS.txt)을 확인하세요. Mac에서 확인 후 실행하려면 Apple의 [안전한 앱 열기 안내](https://support.apple.com/en-us/102445)에 따라 시스템 설정 → 개인정보 보호 및 보안에서 해당 앱의 실행을 허용하세요. 조직의 보안 정책으로 제한될 때는 관리자에게 문의하세요.
 
@@ -41,7 +43,7 @@ This helper lets Figma PDF Exporter Pro or Preview find locally installed fonts 
 
 ### Download and setup
 
-Download the ZIP for your computer from [v0.1.0](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/tag/v0.1.0):
+Download the ZIP for your computer from [v0.1.1](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/tag/v0.1.1):
 
 | Computer | Download |
 | --- | --- |
@@ -49,10 +51,12 @@ Download the ZIP for your computer from [v0.1.0](https://github.com/CSE-Shaco/fi
 | Intel Mac | [macOS x86_64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-macos-x86_64.zip) |
 | Windows x64 | [Windows x64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-windows-x64.zip) |
 
-1. Extract the entire ZIP, keeping its `dist` directory beside the launcher.
+1. Extract the entire ZIP, keeping its `dist` directory beside the launcher. `LICENSE` covers the helper; `licenses/` contains runtime component notices.
 2. Run `start-macos.command` on Mac or `start-windows.cmd` on Windows. Python installation is not required.
 3. Paste the **64-character hexadecimal pairing code** into **Local Fonts** in PDF Exporter Pro or Preview.
 4. Search fonts in the plugin. Keep the helper window open while using it; close the window or press `Ctrl+C` to stop.
+
+**License:** The helper software and repository source code are provided under the [MIT License](LICENSE). It does not apply to user fonts or third-party components distributed with the helper; those remain under their respective licenses and notices. You are responsible for confirming font rights and permitted use.
 
 **This release has no publisher signature or notarization.** macOS Gatekeeper or Windows SmartScreen may block it. Verify the source and [SHA-256 checksums](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/SHA256SUMS.txt). On Mac, follow [Apple’s guidance](https://support.apple.com/en-us/102445) to allow the specific app in System Settings → Privacy & Security after checking it. Contact your administrator if organizational policy blocks execution.
 
