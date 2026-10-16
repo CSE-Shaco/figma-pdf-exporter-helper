@@ -68,7 +68,11 @@ The helper listens only on the local loopback interface and authenticates with t
 
 Use [Issues](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/issues) for installation or startup problems. Do not include pairing codes, tokens, font files or private information.
 
-## 소스에서 빌드 / Build from source
+<details>
+<summary>개발자용: 소스에서 직접 빌드 / For developers: Build from source</summary>
+
+일반 사용자는 위 ZIP 다운로드만 하면 됩니다. 이 단계는 도우미 코드를 수정하거나 실행 파일을 직접 만드는 개발자용입니다.
+Regular users only need the ZIP downloads above. These steps are for developers modifying the helper or producing executables themselves.
 
 macOS는 대상 CPU에서 네이티브로 실행되는 Python 3.9+가 필요합니다. CI는 Python 3.13과 별도 네이티브 runner를 사용합니다. Windows에서는 PATH의 Python을 사용하며 `PYTHON_BIN`으로 다른 실행 파일을 지정할 수 있습니다.
 macOS builds require Python 3.9+ running natively on the target CPU. CI uses Python 3.13 and separate native runners. Windows uses Python on PATH; set `PYTHON_BIN` to choose another interpreter.
@@ -86,3 +90,5 @@ Windows: `build-windows.cmd`, then `python smoke-binary.py dist/font-helper-wind
 
 빌드는 PyInstaller 6.22.3을 사용합니다. Actions의 **Build local font helper**는 테스트 artifact만 업로드하고 자동으로 릴리스를 게시하지 않습니다. Artifact는 14일 뒤 만료됩니다. 고객 다운로드에는 Releases를 사용하세요. ZIP의 `licenses` 폴더에는 번들 런타임의 제3자 고지가 포함됩니다.
 Builds use PyInstaller 6.22.3. **Build local font helper** uploads CI test artifacts only; it does not automatically publish releases. Artifacts expire after 14 days. Use Releases for customer downloads. The ZIP’s `licenses` directory contains third-party runtime notices.
+
+</details>
