@@ -20,7 +20,7 @@ The helper is designed to listen on the local loopback interface. Font search re
 - A macOS Apple Silicon helper exists, but it is currently unsigned and has not been notarized.
 - An Intel Mac build is not ready.
 - A Windows PowerShell helper exists, but a packaged executable has not been built or validated.
-- Adobe Fonts availability is not guaranteed; see the product documentation for current compatibility details.
+- Creative Cloud activated Adobe Fonts have not been verified with the helper. Adobe Fonts availability is not guaranteed; see the product documentation for current compatibility details.
 
 These limitations may change. Check the release notes before installing a published build.
 
