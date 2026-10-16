@@ -4,68 +4,74 @@
 
 ## 한국어
 
-Figma PDF Exporter에서 컴퓨터에 설치된 글꼴을 찾고 PDF에 사용할 수 있도록 돕는 로컬 도우미의 다운로드 및 설치 안내입니다.
+Figma PDF Exporter Pro 또는 Preview에서 컴퓨터에 설치된 글꼴을 찾아 PDF에 사용할 수 있도록 돕는 도우미입니다.
 
-이 저장소에는 독립 실행 가능한 도우미 소스와 Intel Mac·Apple Silicon·Windows 빌드 자동화가 있습니다. **현재 고객용 다운로드 파일이나 공개 릴리스는 없습니다.** 이 저장소에 릴리스가 게시되기 전까지는 다운로드할 수 있는 것으로 간주하지 마세요.
+### 다운로드 및 설치
 
-### 설치 예정 순서
+[v0.1.0 릴리스](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/tag/v0.1.0)에서 컴퓨터에 맞는 ZIP을 내려받으세요.
 
-릴리스가 게시되면 운영체제에 맞는 압축 파일을 이 저장소의 Releases 페이지에서 내려받아 압축을 푼 다음, 압축 파일에 포함된 실행 명령을 사용하세요.
+| 컴퓨터 | 다운로드 |
+| --- | --- |
+| Apple Silicon Mac (M 시리즈) | [macOS ARM64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-macos-arm64.zip) |
+| Intel Mac | [macOS x86_64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-macos-x86_64.zip) |
+| Windows x64 | [Windows x64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-windows-x64.zip) |
 
-- macOS: `start-macos.command`
-- Windows: `start-windows.cmd`
+1. ZIP 전체를 압축 해제하세요. 내부 `dist` 폴더와 실행 파일을 함께 유지하세요.
+2. Mac은 `start-macos.command`, Windows는 `start-windows.cmd`를 실행하세요. Python 설치는 필요하지 않습니다.
+3. 창에 표시된 **64자리 16진수 연결 코드**를 PDF Exporter Pro 또는 Preview의 **Local Fonts** 영역에 입력하세요.
+4. 플러그인에서 글꼴을 검색하세요. 사용하는 동안 도우미 창을 열어 두세요. 종료하려면 창을 닫거나 `Ctrl+C`를 누르세요.
 
-도우미가 표시하는 **64자리 16진수 연결 코드**를 PDF Exporter Pro 또는 Preview의 Local Fonts 영역에 입력한 다음, 플러그인에서 컴퓨터에 설치된 글꼴을 검색하세요.
+**이 릴리스는 서명·공증되지 않았습니다.** macOS Gatekeeper나 Windows SmartScreen이 실행을 제한할 수 있습니다. 출처와 [SHA-256 체크섬](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/SHA256SUMS.txt)을 확인하세요. Mac에서 확인 후 실행하려면 Apple의 [안전한 앱 열기 안내](https://support.apple.com/en-us/102445)에 따라 시스템 설정 → 개인정보 보호 및 보안에서 해당 앱의 실행을 허용하세요. 조직의 보안 정책으로 제한될 때는 관리자에게 문의하세요.
 
-도우미는 컴퓨터 내부의 루프백 인터페이스에서 통신합니다. 글꼴 검색 요청은 로컬 컴퓨터에 머뭅니다. 플러그인은 필요한 글꼴 패밀리 이름을 요청하고, 인증된 루프백 연결을 통해 일치하는 글꼴 데이터를 받습니다. 문서 텍스트는 전송되지 않습니다. 연결에는 비공개 토큰을 사용하며, 기존 글꼴 접근 검사는 그대로 적용됩니다.
+### 지원 범위와 검증
 
-### 제공 상태와 제한
+- Intel Mac과 Apple Silicon Mac을 별도 네이티브 빌드로 제공합니다. macOS 15 CI에서 실행·OS 글꼴 검색·인증·다운로드 바이트의 SHA-256 검증을 통과했습니다. 다른 macOS 버전은 별도 검증하지 않았습니다.
+- Windows x64 실행 파일은 Windows Server 2022 CI에서 같은 실행·인증·글꼴 다운로드 검증을 통과했습니다. Windows 10/11 데스크톱에서의 수동 사용 검증은 별도입니다. Windows ARM64 빌드는 제공하지 않습니다.
+- macOS CoreText 및 Windows 글꼴 등록/표준 폴더에 노출된 읽기 가능한 SFNT/TTC 글꼴을 찾습니다. 확장자 없는 활성화 글꼴도 실제 헤더로 확인합니다. WOFF/WOFF2는 지원하지 않습니다.
+- 단일 글꼴은 20 MB, 글꼴 컬렉션은 64 MB까지 읽습니다. 플러그인의 글꼴 이름·스타일·문자 포함 여부·PDF 임베딩 제한 검사도 적용됩니다.
+- Adobe 출처를 이유로 제외하지 않습니다. Creative Cloud에서 다른 앱에서도 사용할 수 있도록 글꼴을 활성화한 뒤 도우미를 다시 실행하세요. 실제 Creative Cloud 활성화 환경은 미검증이며, Windows OS 글꼴 등록 밖의 CC 글꼴은 검색되지 않을 수 있습니다. 비공개 캐시나 보호된 컨테이너는 탐색하거나 해독하지 않습니다. 글꼴 사용 권한과 허용된 사용 방식은 사용자가 확인해야 합니다.
 
-- Apple Silicon용 macOS 도우미가 있지만, 현재 서명되지 않았고 공증도 받지 않았습니다.
-- Intel Mac용 `x86_64` 빌드와 CPU 자동 선택 런처를 구현했습니다. 실제 Intel CI에서 빌드·실행·설치 글꼴 검색·인증·다운로드 SHA-256 검증을 통과했습니다.
-- Windows PowerShell 도우미 통합 검증과 패키지된 실행 파일 빌드를 Windows CI에서 통과했습니다. 실행 파일 자체의 실사용 검증은 별도입니다.
-- macOS CoreText 또는 Windows 글꼴 등록을 통해 운영체제에 노출된 읽기 가능한 SFNT/TTC 글꼴을 지원합니다. 활성화된 글꼴에 파일 확장자가 없어도 찾을 수 있습니다. Adobe 글꼴도 제작사만을 이유로 제외하지 않습니다. 실제 Creative Cloud 활성화 환경에서는 확인하지 않았으며, Windows에서 운영체제 글꼴 등록 밖에 있는 CC 글꼴은 검색되지 않을 수 있습니다. 비공개 캐시나 보호된 컨테이너는 검색하거나 해독하지 않습니다. 글꼴 사용 권한과 허용된 사용 방식은 사용자가 확인해야 하며, 기존 PDF 임베딩 검사도 계속 적용됩니다.
+도우미는 로컬 컴퓨터의 루프백 인터페이스에서만 통신하며 연결 코드로 인증합니다. 플러그인은 필요한 글꼴 패밀리 이름을 요청하고 글꼴 데이터를 받습니다. 문서 텍스트는 전송하지 않습니다. 설치 글꼴을 바꾸면 도우미를 재실행해 목록을 갱신하세요.
 
-제공 상태와 제한은 바뀔 수 있습니다. 공개 빌드를 설치하기 전에 릴리스 노트를 확인하세요.
-
-### 지원
-
-도우미 설치나 실행 문제는 이 저장소의 Issues에 등록해 주세요. 이슈에 연결 코드, 접근 토큰, 글꼴 파일 또는 기타 비공개 정보를 포함하지 마세요.
+설치·실행 문제는 [Issues](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/issues)에 등록하세요. 연결 코드, 토큰, 글꼴 파일, 비공개 정보를 올리지 마세요.
 
 ## English
 
-Local font helper downloads and installation guide for Figma PDF Exporter.
+This helper lets Figma PDF Exporter Pro or Preview find locally installed fonts for PDF export.
 
-This repository contains the standalone helper source and automated Intel Mac, Apple Silicon and Windows builds. **No customer download or published release is available yet.** Do not treat a future release link as available until a release is published here.
+### Download and setup
 
-### Planned setup
+Download the ZIP for your computer from [v0.1.0](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/tag/v0.1.0):
 
-When a release is available, choose the archive for your operating system, download it from this repository's Releases page, extract it, and start the helper with the operating-system-specific command included in the archive:
+| Computer | Download |
+| --- | --- |
+| Apple Silicon Mac (M series) | [macOS ARM64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-macos-arm64.zip) |
+| Intel Mac | [macOS x86_64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-macos-x86_64.zip) |
+| Windows x64 | [Windows x64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-windows-x64.zip) |
 
-- macOS: `start-macos.command`
-- Windows: `start-windows.cmd`
+1. Extract the entire ZIP, keeping its `dist` directory beside the launcher.
+2. Run `start-macos.command` on Mac or `start-windows.cmd` on Windows. Python installation is not required.
+3. Paste the **64-character hexadecimal pairing code** into **Local Fonts** in PDF Exporter Pro or Preview.
+4. Search fonts in the plugin. Keep the helper window open while using it; close the window or press `Ctrl+C` to stop.
 
-The helper displays a 64-character hexadecimal pairing code. Enter that code in the Local Fonts area of PDF Exporter Pro or Preview, then use the plugin to search fonts installed on your computer.
+**This release has no publisher signature or notarization.** macOS Gatekeeper or Windows SmartScreen may block it. Verify the source and [SHA-256 checksums](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/SHA256SUMS.txt). On Mac, follow [Apple’s guidance](https://support.apple.com/en-us/102445) to allow the specific app in System Settings → Privacy & Security after checking it. Contact your administrator if organizational policy blocks execution.
 
-The helper is designed to listen on the local loopback interface. Font search requests stay on the local machine; the plugin requests needed font family names and receives matching font bytes over authenticated loopback. Document text is not sent. Pairing uses a private token, and the existing font access checks remain in effect.
+### Support and validation
 
-### Availability and limitations
+- Separate native Intel and Apple Silicon Mac builds pass startup, OS font discovery, authentication and downloaded-byte SHA-256 checks in macOS 15 CI. Other macOS versions have not been separately verified.
+- The Windows x64 executable passes equivalent checks in Windows Server 2022 CI. Manual use on Windows 10/11 desktops remains unverified. No Windows ARM64 build is provided.
+- Readable SFNT/TTC fonts exposed by macOS CoreText or Windows font registrations/standard directories are indexed by signature, including extensionless activated fonts. WOFF/WOFF2 are not supported.
+- Standalone fonts are limited to 20 MB, collections to 64 MB. The plugin also checks font names, styles, glyph coverage and PDF embedding restrictions.
+- Adobe Fonts are not excluded based on publisher. Activate fonts for other apps in Creative Cloud, then restart the helper. Actual Creative Cloud activation has not been verified; Windows CC fonts outside OS registrations may not be discovered. Private caches and protected containers are not scanned or decoded. Font licensing and permitted use remain your responsibility.
 
-- A macOS Apple Silicon helper exists, but it is currently unsigned and has not been notarized.
-- Native Intel Mac (`x86_64`) builds and CPU-aware launching pass native Intel CI, including standalone execution, OS font matching, authentication and downloaded-byte SHA-256 verification.
-- Windows CI passes PowerShell helper integration tests and builds the packaged executable. End-user validation of the executable remains separate.
-- Readable SFNT/TTC fonts exposed by macOS CoreText or Windows font registrations are supported even when activated fonts have no filename extension. Adobe Fonts are not excluded based on publisher. Actual Creative Cloud activation has not been verified; Windows CC fonts outside OS registrations may not be discovered. Private caches and protected containers are not scanned or decoded. Font licensing and permitted use remain the user’s responsibility, and existing PDF embedding checks still apply.
+The helper listens only on the local loopback interface and authenticates with the pairing code. The plugin requests font family names and receives font bytes; document text is not sent. Restart the helper after changing installed fonts.
 
-These limitations may change. Check the release notes before installing a published build.
-
-### Support
-
-Please use this repository's Issues for helper installation and startup problems. Do not include pairing codes, access tokens, font files, or other private data in an issue.
+Use [Issues](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/issues) for installation or startup problems. Do not include pairing codes, tokens, font files or private information.
 
 ## 소스에서 빌드 / Build from source
 
-Python 3.9+가 설치된 해당 CPU의 Mac에서 실행하세요. GitHub Actions는 Python 3.13과 CPU별 네이티브 runner를 사용합니다.
-Use a Mac with Python 3.9+ running natively on the target CPU. CI uses Python 3.13 on separate native runners.
+macOS는 대상 CPU에서 네이티브로 실행되는 Python 3.9+가 필요합니다. CI는 Python 3.13과 별도 네이티브 runner를 사용합니다. Windows에서는 PATH의 Python을 사용하며 `PYTHON_BIN`으로 다른 실행 파일을 지정할 수 있습니다.
+macOS builds require Python 3.9+ running natively on the target CPU. CI uses Python 3.13 and separate native runners. Windows uses Python on PATH; set `PYTHON_BIN` to choose another interpreter.
 
 ```sh
 python3 -m unittest discover -s . -p 'test_*.py'
@@ -74,16 +80,9 @@ TARGET_ARCH=x86_64 ./build-macos.sh
 # Apple Silicon
 TARGET_ARCH=arm64 ./build-macos.sh
 python3 smoke-binary.py dist/font-helper-macos-$(python3 -c 'import platform; print(platform.machine())')
-./start-macos.command
 ```
 
-다른 CPU의 Python으로 빌드하면 오류로 중단합니다. `PYTHON_BIN`으로 해당 CPU의 Python 실행 파일을 지정할 수 있습니다. 런처는 Intel에서 `dist/font-helper-macos-x86_64`, Apple Silicon에서 `dist/font-helper-macos-arm64`를 선택합니다. 호환되는 기존 `dist/font-helper-macos`와 Python 소스 실행도 지원합니다.
-The build rejects a Python interpreter running on a different CPU. Set `PYTHON_BIN` to select the native interpreter. The launcher selects the CPU-specific binary and retains compatible legacy binary and Python source fallbacks.
+Windows: `build-windows.cmd`, then `python smoke-binary.py dist/font-helper-windows.exe`.
 
-Actions → **Build local font helper** → **Run workflow**에서 빌드할 수 있습니다. 성공하면 `font-helper-macos-x86_64-ci`, `font-helper-macos-arm64-ci`, `font-helper-windows-ci` 테스트 artifact가 생성됩니다. macOS artifact는 런처·바이너리·README를 포함한 ZIP 및 SHA-256입니다. CI artifact는 14일 후 만료되며 고객용 Releases 다운로드가 아닙니다. 빌드 자동화는 공개 릴리스를 게시하지 않습니다.
-Run **Build local font helper** in Actions to create separate test artifacts. macOS ZIPs include the launcher, executable, README and a SHA-256 file. Artifacts expire after 14 days; they are not customer releases. The workflow never publishes a release.
-
-### 빌드 검증 / Build verification (2026-10-16)
-
-[Intel 및 Apple Silicon native 실행 근거](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/actions/runs/38829511743): 두 macOS job에서 Python CPU 검사·11개 회귀·standalone 실행·OS 글꼴 검색·인증·다운로드 검증·ZIP 생성 통과. 해당 run의 기존 Windows 테스트 오류는 후속 커밋에서 수정했습니다.
-[Latest build](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/actions/runs/38829719268) includes the Windows PowerShell fixture fixes. No release has been published.
+빌드는 PyInstaller 6.22.3을 사용합니다. Actions의 **Build local font helper**는 테스트 artifact만 업로드하고 자동으로 릴리스를 게시하지 않습니다. Artifact는 14일 뒤 만료됩니다. 고객 다운로드에는 Releases를 사용하세요. ZIP의 `licenses` 폴더에는 번들 런타임의 제3자 고지가 포함됩니다.
+Builds use PyInstaller 6.22.3. **Build local font helper** uploads CI test artifacts only; it does not automatically publish releases. Artifacts expire after 14 days. Use Releases for customer downloads. The ZIP’s `licenses` directory contains third-party runtime notices.

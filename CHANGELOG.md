@@ -1,8 +1,9 @@
 # Changelog
 
-## Unreleased
+## v0.1.0 — 2026-10-16
 
-- The development helper now discovers OS-exposed readable SFNT/TTC fonts by signature, including extensionless activated font paths. Actual Creative Cloud activation and Windows native validation remain unverified. No updated download has been released.
-
-- Added the initial repository guide for the local font helper.
-- No customer download or release has been published.
+- First public download: native macOS ARM64, macOS x86_64 and Windows x64 ZIPs with launchers, Korean/English setup instructions, runtime notices and SHA-256 checksums.
+- Authenticated loopback font matching and download; OS-exposed SFNT/TTC fonts, including extensionless activated font paths.
+- Native macOS and frozen Windows executable startup, authentication, OS font discovery and downloaded-byte integrity verified in CI.
+- UTF-8 startup output for redirected Windows consoles; Windows builds use the selected Python interpreter.
+- No publisher signing or notarization. Actual Creative Cloud activation and Windows 10/11 desktop manual validation remain unverified.
