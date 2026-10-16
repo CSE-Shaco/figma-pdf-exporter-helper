@@ -3,6 +3,7 @@
 import hashlib
 import http.client
 import json
+import os
 import queue
 import re
 import subprocess
@@ -60,9 +61,15 @@ def main():
         expected = index.read(found['id'])
         assert expected and hashlib.sha256(actual).digest() == hashlib.sha256(expected).digest()
         client.close()
-        print('PASS: standalone startup, unauthorized rejection, OS font match and SHA-256 download')
+        print('PASS: standalone startup, unauthorized rejection, OS font match and SHA-256 download', flush=True)
     finally:
-        process.terminate()
+        # Windows onefile bootloaders have a child process holding stdout open.
+        # Terminating only the parent leaves the reader blocked during cleanup.
+        if os.name == 'nt':
+            subprocess.run(['taskkill', '/PID', str(process.pid), '/T', '/F'],
+                           stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=15)
+        else:
+            process.terminate()
         try:
             process.wait(timeout=10)
         except subprocess.TimeoutExpired:
