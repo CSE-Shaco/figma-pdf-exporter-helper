@@ -6,8 +6,8 @@ $folder = Join-Path $env:LOCALAPPDATA 'Microsoft\Windows\Fonts'
 $fixture = Join-Path $folder 'codex-helper-fixture-extensionless'
 $out = Join-Path $env:TEMP ([guid]::NewGuid().ToString() + '.out')
 $err = Join-Path $env:TEMP ([guid]::NewGuid().ToString() + '.err')
-function BE16([int]$v) { return [byte[]]@(($v -shr 8) -band 255, $v -band 255) }
-function BE32([int]$v) { return [byte[]]@(($v -shr 24) -band 255, ($v -shr 16) -band 255, ($v -shr 8) -band 255, $v -band 255) }
+function BE16([int]$v) { return [byte[]]@((($v -shr 8) -band 255), ($v -band 255)) }
+function BE32([int]$v) { return [byte[]]@((($v -shr 24) -band 255), (($v -shr 16) -band 255), (($v -shr 8) -band 255), ($v -band 255)) }
 $legacy = [Text.Encoding]::BigEndianUnicode.GetBytes('Legacy Fixture')
 $typographic = [Text.Encoding]::BigEndianUnicode.GetBytes('Typographic Fixture')
 $table = [byte[]]@(0, 0, 0, 2, 0, 30)
