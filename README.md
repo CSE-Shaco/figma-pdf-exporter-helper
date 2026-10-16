@@ -22,8 +22,8 @@ Figma PDF Exporter에서 컴퓨터에 설치된 글꼴을 찾고 PDF에 사용�
 ### 제공 상태와 제한
 
 - Apple Silicon용 macOS 도우미가 있지만, 현재 서명되지 않았고 공증도 받지 않았습니다.
-- Intel Mac용 `x86_64` 빌드와 CPU 자동 선택 런처를 구현했습니다. 실제 Intel 바이너리 빌드·실행 검증은 GitHub Actions 실행 결과를 확인해야 합니다.
-- Windows PowerShell 도우미는 있지만, 패키지된 실행 파일은 아직 빌드하거나 검증하지 않았습니다.
+- Intel Mac용 `x86_64` 빌드와 CPU 자동 선택 런처를 구현했습니다. 실제 Intel CI에서 빌드·실행·설치 글꼴 검색·인증·다운로드 SHA-256 검증을 통과했습니다.
+- Windows PowerShell 도우미 통합 검증과 패키지된 실행 파일 빌드를 Windows CI에서 통과했습니다. 실행 파일 자체의 실사용 검증은 별도입니다.
 - macOS CoreText 또는 Windows 글꼴 등록을 통해 운영체제에 노출된 읽기 가능한 SFNT/TTC 글꼴을 지원합니다. 활성화된 글꼴에 파일 확장자가 없어도 찾을 수 있습니다. Adobe 글꼴도 제작사만을 이유로 제외하지 않습니다. 실제 Creative Cloud 활성화 환경에서는 확인하지 않았으며, Windows에서 운영체제 글꼴 등록 밖에 있는 CC 글꼴은 검색되지 않을 수 있습니다. 비공개 캐시나 보호된 컨테이너는 검색하거나 해독하지 않습니다. 글꼴 사용 권한과 허용된 사용 방식은 사용자가 확인해야 하며, 기존 PDF 임베딩 검사도 계속 적용됩니다.
 
 제공 상태와 제한은 바뀔 수 있습니다. 공개 빌드를 설치하기 전에 릴리스 노트를 확인하세요.
@@ -52,8 +52,8 @@ The helper is designed to listen on the local loopback interface. Font search re
 ### Availability and limitations
 
 - A macOS Apple Silicon helper exists, but it is currently unsigned and has not been notarized.
-- Native Intel Mac (`x86_64`) builds and CPU-aware launching are implemented. Actual Intel binary build and execution verification still requires a successful GitHub Actions run.
-- A Windows PowerShell helper exists, but a packaged executable has not been built or validated.
+- Native Intel Mac (`x86_64`) builds and CPU-aware launching pass native Intel CI, including standalone execution, OS font matching, authentication and downloaded-byte SHA-256 verification.
+- Windows CI passes PowerShell helper integration tests and builds the packaged executable. End-user validation of the executable remains separate.
 - Readable SFNT/TTC fonts exposed by macOS CoreText or Windows font registrations are supported even when activated fonts have no filename extension. Adobe Fonts are not excluded based on publisher. Actual Creative Cloud activation has not been verified; Windows CC fonts outside OS registrations may not be discovered. Private caches and protected containers are not scanned or decoded. Font licensing and permitted use remain the user’s responsibility, and existing PDF embedding checks still apply.
 
 These limitations may change. Check the release notes before installing a published build.
@@ -82,3 +82,8 @@ The build rejects a Python interpreter running on a different CPU. Set `PYTHON_B
 
 Actions → **Build local font helper** → **Run workflow**에서 빌드할 수 있습니다. 성공하면 `font-helper-macos-x86_64-ci`, `font-helper-macos-arm64-ci`, `font-helper-windows-ci` 테스트 artifact가 생성됩니다. macOS artifact는 런처·바이너리·README를 포함한 ZIP 및 SHA-256입니다. CI artifact는 14일 후 만료되며 고객용 Releases 다운로드가 아닙니다. 빌드 자동화는 공개 릴리스를 게시하지 않습니다.
 Run **Build local font helper** in Actions to create separate test artifacts. macOS ZIPs include the launcher, executable, README and a SHA-256 file. Artifacts expire after 14 days; they are not customer releases. The workflow never publishes a release.
+
+### 빌드 검증 / Build verification (2026-10-16)
+
+[Intel 및 Apple Silicon native 실행 근거](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/actions/runs/38829511743): 두 macOS job에서 Python CPU 검사·11개 회귀·standalone 실행·OS 글꼴 검색·인증·다운로드 검증·ZIP 생성 통과. 해당 run의 기존 Windows 테스트 오류는 후속 커밋에서 수정했습니다.
+[Latest build](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/actions/runs/38829719268) includes the Windows PowerShell fixture fixes. No release has been published.
