@@ -3,3 +3,11 @@
 .env.*
 !.env.example
 node_modules/
+
+__pycache__/
+*.pyc
+.build-venv*/
+build/
+dist/
+package/
+*.spec
