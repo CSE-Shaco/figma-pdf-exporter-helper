@@ -1,73 +1,48 @@
-# Figma PDF Exporter 로컬 글꼴 도우미
+# Figma PDF Exporter Font Service
 
-[한국어](#한국어) · [English](#english)
+A small native relay for **Figma PDF Exporter → Pro → Figma 글꼴 찾기**. It requests Figma Desktop’s existing local font API with the Origin required by Figma and returns only catalog-listed fonts. It does not scan font folders, bundle fonts, inject code, or patch Figma.
 
-## 한국어
+## Download and install
 
-[Figma PDF Exporter](https://www.figma.com/community/plugin/1687713957062844849) Pro 또는 Preview에서 컴퓨터에 설치된 글꼴을 찾아 PDF에 사용할 수 있도록 돕는 도우미입니다.
+Get the ZIP for your computer from [v0.2.0 releases](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/tag/v0.2.0). Extract it before running the installer. No administrator access, compiler, Node.js, Python, or separate runtime is required on the user’s computer.
 
-### 다운로드 및 설치
+| Computer | ZIP | First-time setup |
+| --- | --- | --- |
+| macOS 11+, Apple Silicon or Intel | `figma-pdf-font-service-macos-universal.zip` | Open `Install.command` once |
+| Windows 10/11 x64 | `figma-pdf-font-service-windows-x64.zip` | Open `Install.cmd`, confirm with `Y` |
+| Windows 11 ARM64 | `figma-pdf-font-service-windows-arm64.zip` | Open `Install.cmd`, confirm with `Y` |
 
-[v0.1.1 릴리스](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/tag/v0.1.1)에서 컴퓨터에 맞는 ZIP을 내려받으세요.
+Keep Figma Desktop running, then use the plugin’s font lookup. Bundled matches need no network request. Remaining faces try the local API first, then the CDN if still unresolved. The local catalog does not contain every Figma cloud font.
 
-| 컴퓨터 | 다운로드 |
-| --- | --- |
-| Apple Silicon Mac (M 시리즈) | [macOS ARM64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-macos-arm64.zip) |
-| Intel Mac | [macOS x86_64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-macos-x86_64.zip) |
-| Windows x64 | [Windows x64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-windows-x64.zip) |
+On macOS, launchd starts the relay on demand and it exits after 120 idle seconds. On Windows, a per-user login entry starts a listener which remains running while signed in. Run the matching `Uninstall.command` or `Uninstall.cmd` to remove this service. See the [macOS guide](local-figma-font-service/macos/README.md) and [Windows guide](local-figma-font-service/windows/README.md) for installation, ownership checks, and recovery details.
 
-1. ZIP 전체를 압축 해제하세요. 내부 `dist` 폴더와 실행 파일을 함께 유지하세요. `LICENSE`에는 헬퍼 라이선스가, `licenses/`에는 런타임 구성요소 고지가 들어 있습니다.
-2. Mac은 `start-macos.command`, Windows는 `start-windows.cmd`를 실행하세요. Python 설치는 필요하지 않습니다.
-3. 창에 표시된 **64자리 16진수 연결 코드**를 PDF Exporter Pro 또는 Preview의 **Local Fonts** 영역에 입력하세요.
-4. 플러그인에서 글꼴을 검색하세요. 사용하는 동안 도우미 창을 열어 두세요. 종료하려면 창을 닫거나 `Ctrl+C`를 누르세요.
+Packages are unsigned; the macOS package is not notarized. Real downloaded-package Gatekeeper, reboot, Windows install/login/uninstall, ARM64 device, and complete Figma editor flows have not yet been verified. Linux has no native package; the plugin’s CDN and manual font registration remain available.
 
-**라이선스:** 헬퍼 프로그램과 저장소 소스 코드는 [MIT License](LICENSE)로 제공됩니다. 이 라이선스는 사용자 글꼴이나 함께 배포된 제3자 구성요소에는 적용되지 않습니다. 해당 구성요소는 각자의 라이선스와 고지를 따릅니다. 사용자는 글꼴 사용 권한과 허용된 사용 방식을 확인해야 합니다.
+## API and implementation
 
-**이 릴리스는 서명·공증되지 않았습니다.** macOS Gatekeeper나 Windows SmartScreen이 실행을 제한할 수 있습니다. 출처와 [SHA-256 체크섬](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/SHA256SUMS.txt)을 확인하세요. Mac에서 확인 후 실행하려면 Apple의 [안전한 앱 열기 안내](https://support.apple.com/en-us/102445)에 따라 시스템 설정 → 개인정보 보호 및 보안에서 해당 앱의 실행을 허용하세요. 조직의 보안 정책으로 제한될 때는 관리자에게 문의하세요.
+The public local endpoint is `http://localhost:38474/figma/`; upstream is fixed to `http://localhost:44950/figma/` with `Origin: https://www.figma.com`. Use **localhost**, not another hostname. Requests accept only loopback Host and missing/opaque-null Origin, allowlisted API paths, and files advertised by a validated Figma catalog. Redirects and environment proxies are disabled. Catalog responses are limited to 8 MB and font responses to 20 MB. TTF, OTF, TTC, and OTC transport is supported; the plugin matches collection members by internal metadata, with variable collections unsupported.
 
-### 지원 범위와 검증
+macOS uses Objective-C, Foundation, system libcurl, and launchd socket activation. Windows uses Go 1.27.2 and `golang.org/x/sys` with per-user lifecycle management. These are separate implementations of the same API contract. [Protocol and native development details](local-figma-font-service/README.md).
 
-- Intel Mac과 Apple Silicon Mac을 별도 네이티브 빌드로 제공합니다. macOS 15 CI에서 실행·OS 글꼴 검색·인증·다운로드 바이트의 SHA-256 검증을 통과했습니다. 다른 macOS 버전은 별도 검증하지 않았습니다.
-- Windows x64 실행 파일은 Windows Server 2022 CI에서 같은 실행·인증·글꼴 다운로드 검증을 통과했습니다. Windows 10/11 데스크톱에서의 수동 사용 검증은 별도입니다. Windows ARM64 빌드는 제공하지 않습니다.
-- macOS CoreText 및 Windows 글꼴 등록/표준 폴더에 노출된 읽기 가능한 SFNT/TTC 글꼴을 찾습니다. 확장자 없는 활성화 글꼴도 실제 헤더로 확인합니다. WOFF/WOFF2는 지원하지 않습니다.
-- 단일 글꼴은 20 MB, 글꼴 컬렉션은 64 MB까지 읽습니다. 플러그인의 글꼴 이름·스타일·문자 포함 여부·PDF 임베딩 제한 검사도 적용됩니다.
-- Adobe 출처를 이유로 제외하지 않습니다. Creative Cloud에서 다른 앱에서도 사용할 수 있도록 글꼴을 활성화한 뒤 도우미를 다시 실행하세요. 실제 Creative Cloud 활성화 환경은 미검증이며, Windows OS 글꼴 등록 밖의 CC 글꼴은 검색되지 않을 수 있습니다. 비공개 캐시나 보호된 컨테이너는 탐색하거나 해독하지 않습니다. 글꼴 사용 권한과 허용된 사용 방식은 사용자가 확인해야 합니다.
+## Build and verify
 
-도우미는 로컬 컴퓨터의 루프백 인터페이스에서만 통신하며 연결 코드로 인증합니다. 플러그인은 필요한 글꼴 패밀리 이름을 요청하고 글꼴 데이터를 받습니다. 문서 텍스트는 전송하지 않습니다. 설치 글꼴을 바꾸면 도우미를 재실행해 목록을 갱신하세요.
+```sh
+# macOS, Xcode command-line tools required
+bash local-figma-font-service/macos/build.sh
+mkdir -p local-figma-font-service/build
+xcrun clang -fobjc-arc -mmacosx-version-min=11.0 -O2 -Wall -Wextra -Werror -framework Foundation -lcurl local-figma-font-service/test.m -o local-figma-font-service/build/test-service
+local-figma-font-service/build/test-service
+python3 local-figma-font-service/macos/tests/lifecycle_test.py
 
-설치·실행 문제는 [Issues](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/issues)에 등록하세요. 연결 코드, 토큰, 글꼴 파일, 비공개 정보를 올리지 마세요.
+# Go 1.27.2 and Python 3 required; produces Windows x64 + ARM64 packages
+bash local-figma-font-service/windows/build.sh
+(cd local-figma-font-service/windows && go test ./... && go vet ./...)
+```
 
-## English
+Builds and CI do not install services or publish releases automatically. CI validates native fixtures and Go tests, cross-builds both Windows architectures, and uploads package artifacts. Actual Windows lifecycle verification is documented in `local-figma-font-service/windows/tests/windows-smoke.ps1` and requires an explicit isolated test environment.
 
-This helper lets [Figma PDF Exporter](https://www.figma.com/community/plugin/1687713957062844849) Pro or Preview find locally installed fonts for PDF export.
+## Previous helper
 
-### Download and setup
+**v0.1.0 and v0.1.1 are legacy releases** of the previous font-folder helper and are not compatible with this API-relay setup. New installations should use v0.2.0 or later. Older implementation history and tags are preserved in Git; the current source tree contains the replacement service only. The repository name is retained to keep the existing download location.
 
-Download the ZIP for your computer from [v0.1.1](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/tag/v0.1.1):
-
-| Computer | Download |
-| --- | --- |
-| Apple Silicon Mac (M series) | [macOS ARM64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-macos-arm64.zip) |
-| Intel Mac | [macOS x86_64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-macos-x86_64.zip) |
-| Windows x64 | [Windows x64](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/font-helper-windows-x64.zip) |
-
-1. Extract the entire ZIP, keeping its `dist` directory beside the launcher. `LICENSE` covers the helper; `licenses/` contains runtime component notices.
-2. Run `start-macos.command` on Mac or `start-windows.cmd` on Windows. Python installation is not required.
-3. Paste the **64-character hexadecimal pairing code** into **Local Fonts** in PDF Exporter Pro or Preview.
-4. Search fonts in the plugin. Keep the helper window open while using it; close the window or press `Ctrl+C` to stop.
-
-**License:** The helper software and repository source code are provided under the [MIT License](LICENSE). It does not apply to user fonts or third-party components distributed with the helper; those remain under their respective licenses and notices. You are responsible for confirming font rights and permitted use.
-
-**This release has no publisher signature or notarization.** macOS Gatekeeper or Windows SmartScreen may block it. Verify the source and [SHA-256 checksums](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/releases/latest/download/SHA256SUMS.txt). On Mac, follow [Apple’s guidance](https://support.apple.com/en-us/102445) to allow the specific app in System Settings → Privacy & Security after checking it. Contact your administrator if organizational policy blocks execution.
-
-### Support and validation
-
-- Separate native Intel and Apple Silicon Mac builds pass startup, OS font discovery, authentication and downloaded-byte SHA-256 checks in macOS 15 CI. Other macOS versions have not been separately verified.
-- The Windows x64 executable passes equivalent checks in Windows Server 2022 CI. Manual use on Windows 10/11 desktops remains unverified. No Windows ARM64 build is provided.
-- Readable SFNT/TTC fonts exposed by macOS CoreText or Windows font registrations/standard directories are indexed by signature, including extensionless activated fonts. WOFF/WOFF2 are not supported.
-- Standalone fonts are limited to 20 MB, collections to 64 MB. The plugin also checks font names, styles, glyph coverage and PDF embedding restrictions.
-- Adobe Fonts are not excluded based on publisher. Activate fonts for other apps in Creative Cloud, then restart the helper. Actual Creative Cloud activation has not been verified; Windows CC fonts outside OS registrations may not be discovered. Private caches and protected containers are not scanned or decoded. Font licensing and permitted use remain your responsibility.
-
-The helper listens only on the local loopback interface and authenticates with the pairing code. The plugin requests font family names and receives font bytes; document text is not sent. Restart the helper after changing installed fonts.
-
-Use [Issues](https://github.com/CSE-Shaco/figma-pdf-exporter-helper/issues) for installation or startup problems. Do not include pairing codes, tokens, font files or private information.
+Project source is MIT licensed; Windows packages also include Go and x/sys BSD license notices. No proprietary font fixtures or plugin data are distributed here.

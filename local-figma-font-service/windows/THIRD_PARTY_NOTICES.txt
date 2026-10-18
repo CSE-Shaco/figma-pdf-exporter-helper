@@ -1,0 +1,7 @@
+Figma PDF Exporter Windows Font Service
+
+This standalone executable includes the Go standard library (Go 1.27.2,
+https://go.dev/) and golang.org/x/sys v0.46.0
+(https://pkg.go.dev/golang.org/x/sys), both distributed under the BSD 3-clause
+license. Complete license texts accompany this file as GO-LICENSE.txt and
+X-SYS-LICENSE.txt. No third-party fonts are bundled.

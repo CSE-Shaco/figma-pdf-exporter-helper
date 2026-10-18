@@ -1,0 +1,75 @@
+name: Validate and build native packages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  macos-and-packages:
+    runs-on: macos-14
+    env:
+      GOTOOLCHAIN: local
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.2'
+          cache-dependency-path: local-figma-font-service/windows/go.sum
+      - name: Build universal macOS package
+        run: bash local-figma-font-service/macos/build.sh
+      - name: Native HTTP and lifecycle fixtures
+        run: |
+          mkdir -p local-figma-font-service/build
+          xcrun clang -fobjc-arc -mmacosx-version-min=11.0 -O2 -Wall -Wextra -Werror -framework Foundation -lcurl local-figma-font-service/test.m -o local-figma-font-service/build/test-service
+          local-figma-font-service/build/test-service
+          python3 local-figma-font-service/macos/tests/lifecycle_test.py
+      - name: Go race tests and vet
+        working-directory: local-figma-font-service/windows
+        run: |
+          go test -race -count=1 ./...
+          go vet ./...
+      - name: Build Windows x64 and ARM64 packages
+        run: bash local-figma-font-service/windows/build.sh
+      - name: Vet and compile Windows tests for both architectures
+        working-directory: local-figma-font-service/windows
+        run: |
+          for arch in amd64 arm64; do
+            GOOS=windows GOARCH="$arch" go vet ./...
+            GOOS=windows GOARCH="$arch" go test -c -o "${RUNNER_TEMP}/bridge-$arch.test.exe" .
+            GOOS=windows GOARCH="$arch" go test -c -o "${RUNNER_TEMP}/lifecycle-$arch.test.exe" ./cmd/font-service
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: macos-universal
+          path: |
+            local-figma-font-service/macos/dist/*.zip
+            local-figma-font-service/macos/dist/SHA256SUMS.txt
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: windows-x64-arm64
+          path: |
+            local-figma-font-service/windows/dist/*.zip
+            local-figma-font-service/windows/dist/SHA256SUMS.txt
+          if-no-files-found: error
+
+  windows-unit:
+    runs-on: windows-latest
+    env:
+      GOTOOLCHAIN: local
+    defaults:
+      run:
+        working-directory: local-figma-font-service/windows
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.2'
+          cache-dependency-path: local-figma-font-service/windows/go.sum
+      - run: go test -count=1 ./...
+      - run: go vet ./...

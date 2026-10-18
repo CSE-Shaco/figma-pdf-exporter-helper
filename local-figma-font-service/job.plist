@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>Label</key><string>dev.figmapdf.local-font-service</string>
+  <key>ProgramArguments</key><array><string>/build/figma-local-font-service</string></array>
+  <key>ProcessType</key><string>Background</string>
+  <key>RunAtLoad</key><false/>
+  <key>KeepAlive</key><false/>
+  <key>ThrottleInterval</key><integer>10</integer>
+  <key>ExitTimeOut</key><integer>15</integer>
+  <key>StandardErrorPath</key><string>/build/service.stderr.log</string>
+  <key>Sockets</key><dict><key>FontHTTP</key><dict>
+    <key>SockFamily</key><string>IPv4</string>
+    <key>SockType</key><string>stream</string>
+    <key>SockNodeName</key><string>127.0.0.1</string>
+    <key>SockServiceName</key><string>38474</string>
+    <key>SockPassive</key><true/>
+  </dict></dict>
+</dict></plist>
